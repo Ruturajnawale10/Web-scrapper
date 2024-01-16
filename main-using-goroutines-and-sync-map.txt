@@ -1,0 +1,71 @@
+// package main
+
+// import (
+// 	"fmt"
+// 	"net/http"
+// 	"sync"
+// 	"time"
+
+// 	"golang.org/x/net/html"
+// )
+
+// // go run main.go https://schier.co https://insomnia.rest
+
+// // lock := &sync.Mutex{}
+// func crawl(url string, found_urls *sync.Map, wg *sync.WaitGroup) {
+// 	defer wg.Done()
+// 	res, _ := http.Get(url)
+// 	// bytes, _ := io.ReadAll(res.Body)
+// 	// fmt.Println(string(bytes))
+
+// 	z := html.NewTokenizer(res.Body)
+
+// 	for {
+// 		tt := z.Next()
+
+// 		switch {
+// 		case tt == html.ErrorToken:
+// 			// End of the document, we're done
+// 			res.Body.Close()
+// 			return
+// 		case tt == html.StartTagToken:
+// 			t := z.Token()
+// 			isAnchor := t.Data == "a"
+// 			if isAnchor {
+// 				// fmt.Println("We found a link!")
+// 				for _, a := range t.Attr {
+// 					if a.Key == "href" {
+// 						// fmt.Println("Found href:", a.Val)
+
+// 						found_urls.Store(a.Val, true)
+// 						break
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+// func main() {
+// 	var wg sync.WaitGroup
+// 	start_time := time.Now()
+// 	found_urls := new(sync.Map)
+// 	seed_urls := []string{"https://schier.co", "https://insomnia.rest", "https://insomnia.rest", "https://insomnia.rest", "https://insomnia.rest"}
+
+// 	for _, url := range seed_urls {
+// 		// c := make(chan int, 1)
+// 		wg.Add(1)
+// 		go crawl(url, found_urls, &wg)
+// 	}
+
+// 	wg.Wait()
+
+// 	fmt.Println("URLs found are as follows:")
+// 	found_urls.Range(func(key, value interface{}) bool {
+// 		fmt.Println(key)
+// 		return true
+// 	})
+
+// 	end_time := time.Now()
+// 	fmt.Printf("Total time taken: %v", end_time.Sub(start_time))
+// }
